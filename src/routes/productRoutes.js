@@ -12,13 +12,7 @@ const { db } = require("../models/product");
 
 // Obtener productos con stock mayor a 10 unidades
 router.get("/productos", (req, res) => {
-  db.all("SELECT name, price FROM products WHERE stock > 10", (err, rows) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-      return;
-    }
-    res.json(rows);
-  });
+  getProducts(req, res);
 });
 
 // Añadir un nuevo producto
