@@ -1,69 +1,109 @@
-const sqlite3 = require("sqlite3").verbose();
-const db = new sqlite3.Database(":memory:");
+import db from "../db/database.js";
 
-async function createProductTable() {
-  return new Promise((resolve, reject) => {
-    db.run(
-      `CREATE TABLE IF NOT EXISTS products (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            price REAL NOT NULL,
-            stock INTEGER NOT NULL
-        )`,
-      (err) => {
+class ProductModel {
+  constructor(db) {
+    this.db = db;
+  }
+
+  // metodos CRUD
+  static getProducts() {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM products`;
+      db.all(query, [], (err, rows) => {
         if (err) {
-          console.error("Error creando la tabla de productos:", err);
+          return reject(err);
         } else {
-          console.log("Tabla de productos creada exitosamente.");
+          resolve(rows);
         }
-        resolve();
-      }
-    );
-  });
-}
-
-const addProduct = (product, callback) => {
-  const quey = `INSERT INTO products (name, price, stock) VALUES (?, ?, ?)`;
-  db.run(quey, [product.name, product.price, product.stock], function (err) {
-    if (err) {
-      return callback(err);
-    }
-    callback(null, { id: this.lastID });
-  });
-};
-
-// Funcion para poblar la tabla de productos con datos aleatorios
-const generarNombre = (index) => `Producto ${String.fromCharCode(65 + index)}`;
-
-const generarPrecio = (min, max) =>
-  Math.floor(Math.random() * (max - min + 1)) + min;
-
-const generarStock = (min, max) =>
-  Math.floor(Math.random() * (max - min + 1)) + min;
-
-async function populateProducts(cantidad, rangoDePrecio, rangoDeStock) {
-  return new Promise((resolve, reject) => {
-    const products = [];
-
-    for (let i = 0; i < cantidad; i++) {
-      const name = generarNombre(i);
-      const price = generarPrecio(rangoDePrecio.min, rangoDePrecio.max);
-      const stock = generarStock(rangoDeStock.min, rangoDeStock.max);
-
-      products.push({ name, price, stock });
-    }
-
-    products.forEach((product) => {
-      addProduct(product, (err) => {
-        if (err) {
-          return `Error agregando productos: ${err}`;
-        }
-        console.log(`Producto ${product.name} agregado correctamente.`);
-        resolve();
       });
     });
-    console.log(`Se agregaron ${cantidad} productos a la tabla.`);
-  });
+  }
+
+  static getProductById(id) {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM products WHERE id = ?`;
+      db.get(query, [id], (err, row) => {
+        if (err) {
+          return reject(err);
+        } else {
+          resolve(row);
+        }
+      });
+    });
+  }
+
+  static getProductsByStock(stock) {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM products WHERE stock > ?`;
+      db.all(query, [stock], (err, rows) => {
+        if (err) {
+          return reject(err);
+        } else {
+          resolve(rows);
+        }
+      });
+    });
+  }
+
+  static addProduct(nombre, precio, stock) {
+    return new Promise((resolve, reject) => {
+      const query = `INSERT INTO products (name, price, stock) VALUES (?, ?, ?)`;
+      db.run(query, [nombre, precio, stock], function (err) {
+        if (err) {
+          return reject(err);
+        } else {
+          resolve({ id: this.lastID });
+        }
+      });
+    });
+  }
+
+  static deleteProduct(id) {
+    return new Promise((resolve, reject) => {
+      const query = `DELETE FROM products WHERE id = ?`;
+      db.run(query, [id], function (err) {
+        if (err) {
+          return reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+
+  static updateProduct(id, product) {
+    return new Promise((resolve, reject) => {
+      const updates = [];
+      const parametros = [];
+
+      if (product.name) {
+        updates.push(`name = ?`);
+        parametros.push(product.name);
+      }
+      if (product.price) {
+        updates.push(`price = ?`);
+        parametros.push(product.price);
+      }
+      if (product.stock) {
+        updates.push(`stock = ?`);
+        parametros.push(product.stock);
+      }
+      if (updates.length === 0) {
+        return reject("No se especificaron campos a actualizar");
+      }
+
+      const query = `UPDATE products SET ${updates.join(", ")} WHERE id = ?`;
+      parametros.push(id);
+
+      db.run(query, parametros, function (err) {
+        if (err) {
+          return reject(err);
+        } else {
+          resolve(this.changes);
+        }
+      });
+    });
+  }
 }
 
-module.exports = { db, createProductTable, populateProducts };
+export default ProductModel;
