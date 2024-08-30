@@ -1,16 +1,57 @@
 const express = require("express");
-const { addProduct } = require("../models/product");
+const {
+  addProduct,
+  getProducts,
+  deleteProduct,
+  updateProduct,
+} = require("../controllers/productController");
 
 const router = express.Router();
 
-router.post("/products", (req, res) => {
-  const newProduct = req.body;
+const { db } = require("../models/product");
 
+// Obtener productos con stock mayor a 10 unidades
+router.get("/productos", (req, res) => {
+  db.all("SELECT name, price FROM products WHERE stock > 10", (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json(rows);
+  });
+});
+
+// Añadir un nuevo producto
+router.post("/productos", (req, res) => {
+  const newProduct = req.body;
   addProduct(newProduct, (err, result) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
     res.status(201).json(result);
+  });
+});
+
+// Eliminar un producto por ID
+router.delete("/productos/:id", (req, res) => {
+  const { id } = req.params;
+  deleteProduct(id, (err) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(204).send();
+  });
+});
+
+// Modificar un producto por ID
+router.put("/productos/:id", (req, res) => {
+  const { id } = req.params;
+  const updatedProduct = req.body;
+  updateProduct(id, updatedProduct, (err) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(200).json({ message: "Producto actualizado correctamente!" });
   });
 });
 

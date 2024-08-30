@@ -1,38 +1,43 @@
 const express = require("express");
-const app = express();
 const dotenv = require("dotenv");
-const path = require("path");
 const productRoutes = require("./routes/productRoutes");
+const { createProductTable, populateProducts } = require("./models/product");
+const cors = require("cors");
 
 // Cargar variables de entorno desde .env
 dotenv.config();
 
 // Middleware para parsear JSON
+const app = express();
 app.use(express.json());
 
-// Middleware para servir la aplicación de Svelte
-app.use(express.static(path.join(__dirname, "../frontend/build")));
+// Middleware para habilitar CORS
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+  })
+);
 
-// Middleware para manejar errores
-app.use((err, req, res, next) => {
-  res.status(500).json({ message: err.message });
-});
+(async () => {
+  try {
+    await createProductTable();
+    await populateProducts(
+      50,
+      { min: 100.0, max: 50000.0 },
+      { min: 5, max: 500 }
+    );
+  } catch (err) {
+    console.error("Error al inicializar la base de datos:", err);
+  }
 
-// Middleware para manejar rutas no encontradas
-app.use((req, res) => {
-  res.status(404).json({ message: "Route not found" });
-});
+  app.use("/api", productRoutes);
 
-// Simple ruta para verificar que el servidor está corriendo
-app.get("/", (req, res) => {
-  res.send("POS App is running");
-});
+  app.get("/", (req, res) => {
+    res.send("POS App is running");
+  });
 
-// Iniciar el servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-// Rutas de la API
-app.use("/api", productRoutes);
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+})();

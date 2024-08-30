@@ -1,6 +1,11 @@
+<script>
+  import Productos from "../../lib/Productos.svelte";
+</script>
+
 <section>
     <h1>Productos</h1>
-    <p>Aquí se mostrarán los productos disponibles.</p>
+    
+    <Productos />
 </section>
 
 <style>
