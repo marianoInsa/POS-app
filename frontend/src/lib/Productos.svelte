@@ -7,7 +7,7 @@
   const port = import.meta.env.VITE_PORT || '3000';
 
   onMount(async () => { 
-    const response = await fetch(`${host}:${port}/api/productos`);
+    const response = await fetch(`${host}:${port}/api/productos`);	
         if (response.ok) {
             productos = await response.json();
         } else {
