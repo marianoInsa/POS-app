@@ -1,11 +1,14 @@
 <script>
   import Productos from "../../lib/Productos.svelte";
+
+  export let data;
+  
 </script>
 
 <section>
     <h1>Productos</h1>
     
-    <Productos />
+    <Productos {data}/>
 </section>
 
 <style>
