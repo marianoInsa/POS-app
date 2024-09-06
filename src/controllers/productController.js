@@ -28,8 +28,8 @@ class ProductController {
   }
 
   static async getProductsByStockCT(req, res) {
-    const { stock } = req.params;
     try {
+      const stock = parseInt(req.params.stock, 10);
       const products = await ProductModel.getProductsByStock(stock);
       res.json(products);
     } catch (err) {
