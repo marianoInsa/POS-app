@@ -65,7 +65,7 @@ class ProductModel {
         if (err) {
           return reject(err);
         } else {
-          resolve();
+          resolve(this.changes);
         }
       });
     });
