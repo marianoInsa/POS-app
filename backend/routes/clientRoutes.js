@@ -1,28 +1,21 @@
 import { Router } from "express";
-import ClientController from "../controllers/clientController";
+import ClientController from "../controllers/clientController.js";
 
 const router = Router();
 
-router.post("/clientes", (req, res) =>
-  ClientController.createClientCT(req, res)
-);
+router
+  .route("/")
+  .post((req, res) => ClientController.createClientCT(req, res))
+  .get((req, res) => ClientController.getClientsCT(req, res));
 
-router.get("/clientes", (req, res) => ClientController.getClientsCT(req, res));
+router
+  .route("/:id")
+  .get((req, res) => ClientController.getClientByIdCT(req, res))
+  .put((req, res) => ClientController.updateClientCT(req, res))
+  .delete((req, res) => ClientController.deleteClientCT(req, res));
 
-router.get("/clientes/:username", (req, res) =>
+router.get("/nombre/:name", (req, res) =>
   ClientController.getClientByUsernameCT(req, res)
-);
-
-router.put("/clientes/:id", (req, res) =>
-  ClientController.updateClientCT(req, res)
-);
-
-router.delete("/clientes/:id", (req, res) =>
-  ClientController.deleteClientCT(req, res)
-);
-
-router.post("/clientes/login", (req, res) =>
-  ClientController.loginClientCT(req, res)
 );
 
 export default router;

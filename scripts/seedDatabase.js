@@ -4,7 +4,7 @@ import { faker } from "@faker-js/faker";
 import path from "path";
 
 // Crear una ruta absoluta para la base de datos
-const dbPath = path.resolve("./src/db/database.sqlite3");
+const dbPath = path.resolve("./backend/db/database.sqlite3");
 
 // Conectar a la base de datos
 const db = new sqlite3.Database(dbPath, (err) => {

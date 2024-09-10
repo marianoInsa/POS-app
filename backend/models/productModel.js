@@ -5,7 +5,19 @@ class ProductModel {
     this.db = db;
   }
 
-  // metodos CRUD
+  static addProduct(name, description, price, category) {
+    return new Promise((resolve, reject) => {
+      const query = `INSERT INTO products (name, description, price, category) VALUES (?, ?, ?, ?)`;
+      db.run(query, [name, description, price, category], function (err) {
+        if (err) {
+          return reject(err);
+        } else {
+          resolve({ id: this.lastID });
+        }
+      });
+    });
+  }
+
   static getProducts() {
     return new Promise((resolve, reject) => {
       const query = `SELECT * FROM products`;
@@ -32,45 +44,6 @@ class ProductModel {
     });
   }
 
-  static getProductsByStock(stock) {
-    return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM products WHERE stock > ?`;
-      db.all(query, [stock], (err, rows) => {
-        if (err) {
-          return reject(err);
-        } else {
-          resolve(rows);
-        }
-      });
-    });
-  }
-
-  static addProduct(nombre, precio, stock) {
-    return new Promise((resolve, reject) => {
-      const query = `INSERT INTO products (name, price, stock) VALUES (?, ?, ?)`;
-      db.run(query, [nombre, precio, stock], function (err) {
-        if (err) {
-          return reject(err);
-        } else {
-          resolve({ id: this.lastID });
-        }
-      });
-    });
-  }
-
-  static deleteProduct(id) {
-    return new Promise((resolve, reject) => {
-      const query = `DELETE FROM products WHERE id = ?`;
-      db.run(query, [id], function (err) {
-        if (err) {
-          return reject(err);
-        } else {
-          resolve(this.changes);
-        }
-      });
-    });
-  }
-
   static updateProduct(id, product) {
     return new Promise((resolve, reject) => {
       const updates = [];
@@ -80,13 +53,17 @@ class ProductModel {
         updates.push(`name = ?`);
         parametros.push(product.name);
       }
+      if (product.description) {
+        updates.push(`description = ?`);
+        parametros.push(product.description);
+      }
       if (product.price) {
         updates.push(`price = ?`);
         parametros.push(product.price);
       }
-      if (product.stock) {
-        updates.push(`stock = ?`);
-        parametros.push(product.stock);
+      if (product.category) {
+        updates.push(`category = ?`);
+        parametros.push(product.category);
       }
       if (updates.length === 0) {
         return reject("No se especificaron campos a actualizar");
@@ -96,6 +73,19 @@ class ProductModel {
       parametros.push(id);
 
       db.run(query, parametros, function (err) {
+        if (err) {
+          return reject(err);
+        } else {
+          resolve(this.changes);
+        }
+      });
+    });
+  }
+
+  static deleteProduct(id) {
+    return new Promise((resolve, reject) => {
+      const query = `UPDATE products SET dateDeleted = DATETIME('now') WHERE id = ?`;
+      db.run(query, [id], function (err) {
         if (err) {
           return reject(err);
         } else {
