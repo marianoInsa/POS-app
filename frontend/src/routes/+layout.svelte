@@ -1,14 +1,12 @@
-<!-- <script>
-    export let data;
-</script> -->
-
-<nav>
-    <ul>
-        <li><a href="/">Inicio</a></li>
-        <li><a href="/productos">Productos</a></li>
-        <li><a href="/informacion">Información</a></li>
-    </ul>
-</nav>
+<div>
+  <nav>
+        <a href="/">Inicio</a>
+        <a href="/registrarse">Registrarse</a>
+        <a href="/login">Iniciar Sesión</a>
+        <a href="/productos">Productos</a>
+        <a href="/informacion">Información</a>
+  </nav>
+</div>
 
 <main>
     <slot></slot>
@@ -20,24 +18,40 @@
 </footer>
 
 <style>
-    nav ul {
-        display: flex;
-        list-style: none;
-        background-color: #333;
+    div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #333;
+      color: #fff;
+      padding: 1rem;
+    }
+    nav {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    a {
+      width: 100px;
+      flex: 1;
+      background-color: #666;
+      color: #fff;
+      border: 1px solid;
+      padding: 0.5rem;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.5s ease-out;
+    }
+
+    a:hover,
+    a:focus {
+      background-color: #fff;
+      color: #333;
+    }
+
+    main {
         padding: 1rem;
-    }
-
-    nav ul li {
-        margin-right: 2rem;
-    }
-
-    nav ul li a {
-        color: white;
-        text-decoration: none;
-    }
-
-    nav ul li a:hover {
-        text-decoration: underline;
+        height: 100vh;
     }
 
     footer {
