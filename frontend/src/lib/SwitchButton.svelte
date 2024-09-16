@@ -9,6 +9,7 @@
 
   // Funcion que cambia el estado y emite el evento
   function toggle() {
+    // console.log("Cambiando estado a:", !state);
     state = !state;
     dispatch("switch", { state });
   }

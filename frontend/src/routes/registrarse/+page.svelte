@@ -6,10 +6,8 @@
   }
 </script>
 
-<!-- <SwitchButton leftLabel="Cliente" rightLabel="Vendedor" on:switch={switchUserType} /> -->
-
 <AuthForm 
-  title="Registrarse" 
+  title="Registro de Usuario" 
   buttonLabel="Registrarse"
   onSubmit={register} 
 />
