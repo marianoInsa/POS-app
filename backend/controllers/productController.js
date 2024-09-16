@@ -1,8 +1,23 @@
-import ProductModel from "../models/product.js";
+import ProductModel from "../models/productModel.js";
 
 class ProductController {
   constructor(ProductModel) {
     this.ProductModel = ProductModel;
+  }
+
+  static async addProductCT(req, res) {
+    const { name, description, price, category } = req.body;
+    try {
+      const result = await ProductModel.addProduct(
+        name,
+        description,
+        price,
+        category
+      );
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
   }
 
   static async getProductsCT(req, res) {
@@ -27,21 +42,12 @@ class ProductController {
     }
   }
 
-  static async getProductsByStockCT(req, res) {
+  static async updateProductCT(req, res) {
+    const { id } = req.params;
+    const updatedProduct = req.body;
     try {
-      const stock = parseInt(req.params.stock, 10);
-      const products = await ProductModel.getProductsByStock(stock);
-      res.json(products);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  }
-
-  static async addProductCT(req, res) {
-    const { name, price, stock } = req.body;
-    try {
-      const result = await ProductModel.addProduct(name, price, stock);
-      res.status(201).json(result);
+      await ProductModel.updateProduct(id, updatedProduct);
+      res.json({ message: "Producto actualizado correctamente!" });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
@@ -51,18 +57,7 @@ class ProductController {
     const { id } = req.params;
     try {
       await ProductModel.deleteProduct(id);
-      res.status(204).send();
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  }
-
-  static async updateProductCT(req, res) {
-    const { id } = req.params;
-    const updatedProduct = req.body;
-    try {
-      await ProductModel.updateProduct(id, updatedProduct);
-      res.json({ message: "Producto actualizado correctamente!" });
+      res.json({ message: "Producto eliminado correctamente!" });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }

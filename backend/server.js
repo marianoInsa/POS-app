@@ -5,6 +5,8 @@ import fs from "fs";
 import { config } from "dotenv";
 import db from "./db/database.js";
 import productRoutes from "./routes/productRoutes.js";
+import clientRoutes from "./routes/clientRoutes.js";
+import sellerRoutes from "./routes/sellerRoutes.js";
 
 // Configurar la ruta base para el proyecto
 const __filename = fileURLToPath(import.meta.url);
@@ -41,7 +43,9 @@ function runMigrations() {
 }
 runMigrations();
 
-app.use("/api", productRoutes);
+app.use("/api/productos", productRoutes);
+app.use("/api/clientes", clientRoutes);
+app.use("/api/vendedores", sellerRoutes);
 
 app.get("/", (req, res) => {
   res.send("POS App is running");
