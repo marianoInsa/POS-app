@@ -1,17 +1,18 @@
 <script>
   import SwitchButton from './SwitchButton.svelte';
 
-  export let title = "Titulo";  // Título del formulario
-  export let buttonLabel = "Boton";  // Texto del botón
-  export let onSubmit;  // Función que se ejecuta al hacer click en el botón
+  export let title = "Titulo";
+  export let buttonLabel = "Boton";
+  export let onSubmit;
 
-  let userType = 'Client';
+  let userType = 'Cliente';
   let username = '';
   let password = '';
   let email = '';
   let storeInfo = '';
 
   function switchUserType(event) {
+    // console.log('Cambiando tipo de usuario a:', userType === 'Cliente' ? 'Vendedor' : 'Cliente');
     userType = (userType === 'Cliente' ? 'Vendedor' : 'Cliente');
   }
 </script>
@@ -29,7 +30,7 @@
       required
     />
     
-    {#if userType === 'Vendedor' && title === 'Registrarse'}
+    {#if title === 'Registro de Usuario'}
       <input
         type="email"
         placeholder="Email"
@@ -45,7 +46,7 @@
       required
     />
     
-    {#if userType === 'Vendedor' && title === 'Registrarse'}
+    {#if userType === 'Vendedor' && title === 'Registro de Usuario'}
       <input
         type="text"
         placeholder="Información de Tienda"
@@ -54,7 +55,7 @@
       />
     {/if}
     
-    <button on:click={() => onSubmit({ username, password, email, storeInfo })}>
+    <button on:click={() => onSubmit({ userType, username, password, email, storeInfo })}>
       {buttonLabel}
     </button>
   </div>
