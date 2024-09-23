@@ -1,21 +1,23 @@
 import { Router } from "express";
 import ClientController from "../controllers/clientController.js";
 
-const router = Router();
+const clientRouter = Router();
 
-router
+clientRouter
   .route("/")
-  .post((req, res) => ClientController.createClientCT(req, res))
-  .get((req, res) => ClientController.getClientsCT(req, res));
+  .post((req, res) => ClientController.createClient(req, res))
+  .get((req, res) => ClientController.getClients(req, res));
 
-router
+clientRouter
   .route("/:id")
-  .get((req, res) => ClientController.getClientByIdCT(req, res))
-  .put((req, res) => ClientController.updateClientCT(req, res))
-  .delete((req, res) => ClientController.deleteClientCT(req, res));
+  .get((req, res) => ClientController.getClientById(req, res))
+  .patch((req, res) => ClientController.updateClient(req, res))
+  .delete((req, res) => ClientController.deleteClient(req, res))
+  .head((req, res) => ClientController.clientExistsById(req, res));
 
-router.get("/nombre/:name", (req, res) =>
-  ClientController.getClientByUsernameCT(req, res)
-);
+clientRouter
+  .route("/nombre/:name")
+  .get((req, res) => ClientController.getClientByUsername(req, res))
+  .head((req, res) => ClientController.clientExistsByUsername(req, res));
 
-export default router;
+export default clientRouter;

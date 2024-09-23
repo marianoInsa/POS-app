@@ -1,21 +1,23 @@
 import { Router } from "express";
 import SellerController from "../controllers/sellerController.js";
 
-const router = Router();
+const sellerRoutes = Router();
 
-router
+sellerRoutes
   .route("/")
-  .post((req, res) => SellerController.createSellerCT(req, res))
-  .get((req, res) => SellerController.getSellersCT(req, res));
+  .post((req, res) => SellerController.createSeller(req, res))
+  .get((req, res) => SellerController.getSellers(req, res));
 
-router
+sellerRoutes
   .route("/:id")
-  .get((req, res) => SellerController.getSellerByIdCT(req, res))
-  .put((req, res) => SellerController.updateSellerCT(req, res))
-  .delete((req, res) => SellerController.deleteSellerCT(req, res));
+  .get((req, res) => SellerController.getSellerById(req, res))
+  .patch((req, res) => SellerController.updateSeller(req, res))
+  .delete((req, res) => SellerController.deleteSeller(req, res))
+  .head((req, res) => SellerController.sellerExistsById(req, res));
 
-router.get("/nombre/:name", (req, res) =>
-  SellerController.getSellerByUsernameCT(req, res)
-);
+sellerRoutes
+  .route("/nombre/:name")
+  .get((req, res) => SellerController.getSellerByUsername(req, res))
+  .head((req, res) => SellerController.sellerExistsByUsername(req, res));
 
-export default router;
+export default sellerRoutes;

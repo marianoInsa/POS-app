@@ -7,6 +7,10 @@ import db from "./db/database.js";
 import productRoutes from "./routes/productRoutes.js";
 import clientRoutes from "./routes/clientRoutes.js";
 import sellerRoutes from "./routes/sellerRoutes.js";
+import stockOfProductsRoutes from "./routes/stockOfProductsRoutes.js";
+import saleRoutes from "./routes/saleRoutes.js";
+import saleDetailRoutes from "./routes/saleDetailRoutes.js";
+import offerRoutes from "./routes/offerRoutes.js";
 
 // Configurar la ruta base para el proyecto
 const __filename = fileURLToPath(import.meta.url);
@@ -46,6 +50,10 @@ runMigrations();
 app.use("/api/productos", productRoutes);
 app.use("/api/clientes", clientRoutes);
 app.use("/api/vendedores", sellerRoutes);
+app.use("/api/stock", stockOfProductsRoutes);
+app.use("/api/ventas", saleRoutes);
+app.use("/api/detalle-venta", saleDetailRoutes);
+app.use("/api/ofertas", offerRoutes);
 
 app.get("/", (req, res) => {
   res.send("POS App is running");

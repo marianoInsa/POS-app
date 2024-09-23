@@ -1,40 +1,39 @@
 import ClientModel from "../models/clientModel.js";
+import ClientRepositorySQLite from "../repositories/client/ClientRepositorySQLite.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+
+const clientRepository = new ClientRepositorySQLite();
+const clientModel = new ClientModel(clientRepository);
 
 class ClientController {
-  constructor(ClientModel) {
-    this.ClientModel = ClientModel;
-  }
-
-  static async createClientCT(req, res) {
+  static async createClient(req, res) {
     const { name, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     try {
-      const client = await ClientModel.createClient(
+      const result = await clientModel.createClient(
         name,
         email,
         hashedPassword
       );
-      res.status(201).json(client);
+      res.status(201).json(result);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   }
 
-  static async getClientsCT(req, res) {
+  static async getClients(req, res) {
     try {
-      const clients = await ClientModel.getClients();
+      const clients = await clientModel.getClients();
       res.json(clients);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   }
 
-  static async getClientByIdCT(req, res) {
+  static async getClientById(req, res) {
     const id = req.params.id;
     try {
-      const client = await ClientModel.getClientById(id);
+      const client = await clientModel.getClientById(id);
       if (!client) {
         return res.status(404).json({ error: "Cliente no encontrado" });
       }
@@ -44,10 +43,10 @@ class ClientController {
     }
   }
 
-  static async getClientByUsernameCT(req, res) {
+  static async getClientByUsername(req, res) {
     const { name } = req.params;
     try {
-      const client = await ClientModel.getClientByUsername(name);
+      const client = await clientModel.getClientByUsername(name);
       if (!client) {
         return res.status(404).json({ error: "Cliente no encontrado" });
       }
@@ -57,42 +56,48 @@ class ClientController {
     }
   }
 
-  static async loginClientCT(req, res) {
-    const { name, password } = req.body;
-    try {
-      const client = await ClientModel.getClientByUsername(name);
-      if (!client || !(await bcrypt.compare(password, client.password))) {
-        return res
-          .status(401)
-          .json({ error: "Nombre de usuario o contraseña incorrectos." });
-      }
-
-      const token = jwt.sign({ id: client.id }, process.env.JWT_SECRET, {
-        expiresIn: "1h",
-      });
-
-      res.json({ token });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  }
-
-  static async updateClientCT(req, res) {
+  static async updateClient(req, res) {
     const id = req.params.id;
-    const updateClient = req.body;
+    const updatedClient = req.body;
     try {
-      await ClientModel.updateClient(id, updateClient);
+      await clientModel.updateClient(id, updatedClient);
       res.json({ message: "Cliente actualizado correctamente!" });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   }
 
-  static async deleteClientCT(req, res) {
+  static async deleteClient(req, res) {
     const id = req.params.id;
     try {
-      await ClientModel.deleteClient(id);
+      await clientModel.deleteClient(id);
       res.json({ message: "Cliente eliminado correctamente!" });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+
+  static async clientExistsById(req, res) {
+    const id = req.params.id;
+    try {
+      const clientExists = await clientModel.clientExistsById(id);
+      if (!clientExists) {
+        return res.status(404).json({ error: "Cliente no encontrado" });
+      }
+      res.status(200).json({ message: "Cliente encontrado" });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+
+  static async clientExistsByUsername(req, res) {
+    const { name } = req.params;
+    try {
+      const clientExists = await clientModel.clientExistsByUsername(name);
+      if (!clientExists) {
+        return res.status(404).json({ error: "Cliente no encontrado" });
+      }
+      res.status(200).json({ message: "Cliente encontrado" });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }

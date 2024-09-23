@@ -1,17 +1,23 @@
 import { Router } from "express";
 import ProductController from "../controllers/productController.js";
 
-const router = Router();
+const productRouter = Router();
 
-router
+productRouter
   .route("/")
-  .post((req, res) => ProductController.addProductCT(req, res))
-  .get((req, res) => ProductController.getProductsCT(req, res));
+  .post((req, res) => ProductController.addProduct(req, res))
+  .get((req, res) => ProductController.getProducts(req, res));
 
-router
+productRouter
   .route("/:id")
-  .get((req, res) => ProductController.getProductByIdCT(req, res))
-  .put((req, res) => ProductController.updateProductCT(req, res))
-  .delete((req, res) => ProductController.deleteProductCT(req, res));
+  .get((req, res) => ProductController.getProductById(req, res))
+  .patch((req, res) => ProductController.updateProduct(req, res))
+  .delete((req, res) => ProductController.deleteProduct(req, res))
+  .head((req, res) => ProductController.productExistsById(req, res));
 
-export default router;
+productRouter
+  .route("/nombre/:name")
+  .get((req, res) => ProductController.getProductByName(req, res))
+  .head((req, res) => ProductController.productExistsByName(req, res));
+
+export default productRouter;

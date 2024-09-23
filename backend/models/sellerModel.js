@@ -1,110 +1,38 @@
-import db from "../db/database.js";
-
 class SellerModel {
-  constructor(db) {
-    this.super(db);
+  constructor(repository) {
+    this.repository = repository;
   }
 
-  // registro de vendedor
-  static createSeller(name, email, password, storeInfo) {
-    return new Promise((resolve, reject) => {
-      const query = `INSERT INTO sellers (name, email, password, storeInfo) VALUES (?, ?, ?, ?)`;
-      db.run(query, [name, email, password, storeInfo], function (err) {
-        if (err) {
-          return reject(err);
-        } else {
-          resolve({ id: this.lastID, name, email });
-        }
-      });
-    });
+  createSeller(name, email, password, storeInfo) {
+    return this.repository.createSeller(name, email, password, storeInfo);
   }
 
-  static getSellers() {
-    return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM sellers`;
-      db.all(query, [], (err, rows) => {
-        if (err) {
-          return reject(err);
-        } else {
-          resolve(rows);
-        }
-      });
-    });
+  getSellers() {
+    return this.repository.getSellers();
   }
 
-  static getSellerById(id) {
-    return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM sellers WHERE id = ?`;
-      db.get(query, [id], (err, row) => {
-        if (err) {
-          return reject(err);
-        } else {
-          resolve(row);
-        }
-      });
-    });
+  getSellerById(id) {
+    return this.repository.getSellerById(id);
   }
 
-  static getSellerByUsername(name) {
-    return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM sellers WHERE name = ?`;
-      db.get(query, [name], (err, row) => {
-        if (err) {
-          return reject(err);
-        } else {
-          resolve(row);
-        }
-      });
-    });
+  getSellerByUsername(name) {
+    return this.repository.getSellerByUsername(name);
   }
 
-  // actualizar datos del vendedor
-  static updateSeller(id, seller) {
-    return new Promise((resolve, reject) => {
-      const updates = [];
-      const parametros = [];
-
-      if (seller.name) {
-        updates.push(`name = ?`);
-        parametros.push(seller.name);
-      }
-      if (seller.email) {
-        updates.push(`email = ?`);
-        parametros.push(seller.email);
-      }
-      if (seller.storeInfo) {
-        updates.push(`storeInfo = ?`);
-        parametros.push(seller.storeInfo);
-      }
-      if (updates.length === 0) {
-        return reject("No se especificaron campos a actualizar");
-      }
-
-      const query = `UPDATE sellers SET ${updates.join(", ")} WHERE id = ?`;
-      parametros.push(id);
-
-      db.run(query, parametros, function (err) {
-        if (err) {
-          return reject(err);
-        } else {
-          resolve(this.changes);
-        }
-      });
-    });
+  updateSeller(id, seller) {
+    return this.repository.updateSeller(id, seller);
   }
 
-  // eliminar vendedor
-  static deleteSeller(id) {
-    return new Promise((resolve, reject) => {
-      const query = `UPDATE sellers SET dateDeleted = DATETIME('now') WHERE id = ?`;
-      db.run(query, [id], function (err) {
-        if (err) {
-          return reject(err);
-        } else {
-          resolve(this.changes);
-        }
-      });
-    });
+  deleteSeller(id) {
+    return this.repository.deleteSeller(id);
+  }
+
+  sellerExistsById(id) {
+    return this.repository.sellerExistsById(id);
+  }
+
+  sellerExistsByUsername(name) {
+    return this.repository.sellerExistsByUsername(name);
   }
 }
 

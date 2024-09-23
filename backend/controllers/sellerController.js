@@ -1,41 +1,40 @@
 import SellerModel from "../models/sellerModel.js";
+import SellerRepository from "../repositories/seller/SellerRepositorySQLite.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+
+const sellerRepository = new SellerRepository();
+const sellerModel = new SellerModel(sellerRepository);
 
 class SellerController {
-  constructor(SellerModel) {
-    this.SellerModel = SellerModel;
-  }
-
-  static async createSellerCT(req, res) {
+  static async createSeller(req, res) {
     const { name, email, password, storeInfo } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     try {
-      const seller = await SellerModel.createSeller(
+      const result = await sellerModel.createSeller(
         name,
         email,
         hashedPassword,
         storeInfo
       );
-      res.status(201).json(seller);
+      res.status(201).json(result);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   }
 
-  static async getSellersCT(req, res) {
+  static async getSellers(req, res) {
     try {
-      const sellers = await SellerModel.getSellers();
+      const sellers = await sellerModel.getSellers();
       res.json(sellers);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   }
 
-  static async getSellerByIdCT(req, res) {
+  static async getSellerById(req, res) {
     const id = req.params.id;
     try {
-      const seller = await SellerModel.getSellerById(id);
+      const seller = await sellerModel.getSellerById(id);
       if (!seller) {
         return res.status(404).json({ error: "Vendedor no encontrado" });
       }
@@ -45,10 +44,10 @@ class SellerController {
     }
   }
 
-  static async getSellerByUsernameCT(req, res) {
+  static async getSellerByUsername(req, res) {
     const { name } = req.params;
     try {
-      const seller = await SellerModel.getSellerByUsername(name);
+      const seller = await sellerModel.getSellerByUsername(name);
       if (!seller) {
         return res.status(404).json({ error: "Vendedor no encontrado" });
       }
@@ -58,42 +57,48 @@ class SellerController {
     }
   }
 
-  static async loginSellerCT(req, res) {
-    const { name, password } = req.body;
-    try {
-      const seller = await SellerModel.getSellerByUsername(name);
-      if (!seller || !(await bcrypt.compare(password, user.password))) {
-        return res
-          .status(401)
-          .json({ error: "Nombre de usuario o contraseña incorrectos." });
-      }
-
-      const token = jwt.sign({ id: seller.id }, process.env.JWT_SECRET, {
-        expiresIn: "1h",
-      });
-
-      res.json({ token });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  }
-
-  static async updateSellerCT(req, res) {
+  static async updateSeller(req, res) {
     const id = req.params.id;
     const updatedSeller = req.body;
     try {
-      await SellerModel.updateSeller(id, updatedSeller);
+      await sellerModel.updateSeller(id, updatedSeller);
       res.json({ message: "Vendedor actualizado correctamente!" });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   }
 
-  static async deleteSellerCT(req, res) {
+  static async deleteSeller(req, res) {
     const id = req.params.id;
     try {
-      await SellerModel.deleteSeller(id);
+      await sellerModel.deleteSeller(id);
       res.json({ message: "Vendedor eliminado correctamente!" });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+
+  static async sellerExistsById(req, res) {
+    const id = req.params.id;
+    try {
+      const seller = await sellerModel.getSellerById(id);
+      if (!seller) {
+        return res.status(404).json({ error: "Vendedor no encontrado" });
+      }
+      res.json({ message: "Vendedor encontrado" });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+
+  static async sellerExistsByUsername(req, res) {
+    const { name } = req.params;
+    try {
+      const seller = await sellerModel.getSellerByUsername(name);
+      if (!seller) {
+        return res.status(404).json({ error: "Vendedor no encontrado" });
+      }
+      res.json({ message: "Vendedor encontrado" });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
