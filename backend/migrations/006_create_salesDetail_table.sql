@@ -2,14 +2,14 @@ CREATE TABLE IF NOT EXISTS salesDetail (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     quantity INTEGER NOT NULL,
     subTotal REAL NOT NULL,
-    sku INTEGER NOT NULL,
-    idSale INTEGER NOT NULL,
+    sku INTEGER NOT NULL UNIQUE,
+    idSale INTEGER NOT NULL UNIQUE,
 
     dateCreated TEXT NOT NULL DEFAULT (DATETIME('now')),
     dateUpdated TEXT,
     dateDeleted TEXT,
 
-    FOREIGN KEY (sku) REFERENCES stockOfProducts(sku) ON DELETE CASCADE,
+    FOREIGN KEY (sku) REFERENCES stockOfProducts(sku),
     FOREIGN KEY (idSale) REFERENCES sales(id) ON DELETE CASCADE
 );
 

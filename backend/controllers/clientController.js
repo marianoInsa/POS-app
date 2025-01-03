@@ -7,11 +7,13 @@ const clientModel = new ClientModel(clientRepository);
 
 class ClientController {
   static async createClient(req, res) {
-    const { name, email, password } = req.body;
+    const { username, firstName, lastName, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     try {
       const result = await clientModel.createClient(
-        name,
+        username,
+        firstName,
+        lastName,
         email,
         hashedPassword
       );
@@ -44,9 +46,9 @@ class ClientController {
   }
 
   static async getClientByUsername(req, res) {
-    const { name } = req.params;
+    const { username } = req.params;
     try {
-      const client = await clientModel.getClientByUsername(name);
+      const client = await clientModel.getClientByUsername(username);
       if (!client) {
         return res.status(404).json({ error: "Cliente no encontrado" });
       }
@@ -91,9 +93,9 @@ class ClientController {
   }
 
   static async clientExistsByUsername(req, res) {
-    const { name } = req.params;
+    const { username } = req.params;
     try {
-      const clientExists = await clientModel.clientExistsByUsername(name);
+      const clientExists = await clientModel.clientExistsByUsername(username);
       if (!clientExists) {
         return res.status(404).json({ error: "Cliente no encontrado" });
       }

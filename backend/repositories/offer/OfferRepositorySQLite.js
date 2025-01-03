@@ -2,10 +2,10 @@ import db from "../../db/database.js";
 import IOfferRepository from "./IOfferRepository.js";
 
 class OfferRepositorySQLite extends IOfferRepository {
-  createOffer(name, description, value) {
+  createOffer(idProduct, name, description, value) {
     return new Promise((resolve, reject) => {
-      const query = `INSERT INTO offers (name, description, value) VALUES (?, ?, ?)`;
-      db.run(query, [name, description, value], function (err) {
+      const query = `INSERT INTO offers (idProduct, name, description, value) VALUES (?, ?, ?, ?)`;
+      db.run(query, [idProduct, name, description, value], function (err) {
         if (err) {
           return reject(err);
         } else {

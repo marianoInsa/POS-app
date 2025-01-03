@@ -3,7 +3,7 @@ class SellerModel {
     this.repository = repository;
   }
 
-  createSeller(name, email, password, storeInfo) {
+  createSeller(username, firstName, lastName, email, password, storeInfo) {
     return this.repository.createSeller(name, email, password, storeInfo);
   }
 
@@ -15,8 +15,8 @@ class SellerModel {
     return this.repository.getSellerById(id);
   }
 
-  getSellerByUsername(name) {
-    return this.repository.getSellerByUsername(name);
+  getSellerByUsername(username) {
+    return this.repository.getSellerByUsername(username);
   }
 
   updateSeller(id, seller) {
@@ -31,8 +31,8 @@ class SellerModel {
     return this.repository.sellerExistsById(id);
   }
 
-  sellerExistsByUsername(name) {
-    return this.repository.sellerExistsByUsername(name);
+  sellerExistsByUsername(username) {
+    return this.repository.sellerExistsByUsername(username);
   }
 }
 

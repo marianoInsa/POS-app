@@ -2,16 +2,20 @@ import db from "../../db/database.js";
 import IClientRepository from "./IClientRepository.js";
 
 class ClientRepositorySQLite extends IClientRepository {
-  createClient(name, email, password) {
+  createClient(username, firstName, lastName, email, password) {
     return new Promise((resolve, reject) => {
-      const query = `INSERT INTO clients (name, email, password) VALUES (?, ?, ?)`;
-      db.run(query, [name, email, password], function (err) {
-        if (err) {
-          return reject(err);
-        } else {
-          resolve({ id: this.lastID });
+      const query = `INSERT INTO clients (username, firstName, lastName, email, password) VALUES (?, ?, ?, ?, ?)`;
+      db.run(
+        query,
+        [username, firstName, lastName, email, password],
+        function (err) {
+          if (err) {
+            return reject(err);
+          } else {
+            resolve({ id: this.lastID });
+          }
         }
-      });
+      );
     });
   }
   getClients() {
@@ -40,10 +44,10 @@ class ClientRepositorySQLite extends IClientRepository {
     });
   }
 
-  getClientByUsername(name) {
+  getClientByUsername(username) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM clients WHERE name = ?`;
-      db.get(query, [name], (err, row) => {
+      const query = `SELECT * FROM clients WHERE username = ?`;
+      db.get(query, [username], (err, row) => {
         if (err) {
           return reject(err);
         } else {
@@ -58,9 +62,17 @@ class ClientRepositorySQLite extends IClientRepository {
       const updates = [];
       const parametros = [];
 
-      if (user.name) {
-        updates.push(`name = ?`);
-        parametros.push(user.name);
+      if (user.username) {
+        updates.push(`username = ?`);
+        parametros.push(user.username);
+      }
+      if (user.firstName) {
+        updates.push(`firstName = ?`);
+        parametros.push(user.firstName);
+      }
+      if (user.lastName) {
+        updates.push(`lastName = ?`);
+        parametros.push(user.lastName);
       }
       if (user.email) {
         updates.push(`email = ?`);
@@ -109,10 +121,10 @@ class ClientRepositorySQLite extends IClientRepository {
     });
   }
 
-  clientExistsByUsername(name) {
+  clientExistsByUsername(username) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT COUNT(*) AS count FROM clients WHERE name = ?`;
-      db.get(query, [name], (err, row) => {
+      const query = `SELECT COUNT(*) AS count FROM clients WHERE username = ?`;
+      db.get(query, [username], (err, row) => {
         if (err) {
           return reject(err);
         } else {

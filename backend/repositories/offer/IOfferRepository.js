@@ -1,5 +1,5 @@
 class IOfferRepository {
-  createOffer(name, description, value) {
+  createOffer(idProduct, name, description, value) {
     throw new Error("Metodo no implementado");
   }
 

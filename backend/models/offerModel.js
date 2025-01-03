@@ -3,8 +3,8 @@ class OfferModel {
     this.repository = repository;
   }
 
-  createOffer(name, description, value) {
-    return this.repository.createOffer(name, description, value);
+  createOffer(idProduct, name, description, value) {
+    return this.repository.createOffer(idProduct, name, description, value);
   }
 
   getOffers() {

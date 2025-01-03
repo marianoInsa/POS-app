@@ -7,11 +7,14 @@ const sellerModel = new SellerModel(sellerRepository);
 
 class SellerController {
   static async createSeller(req, res) {
-    const { name, email, password, storeInfo } = req.body;
+    const { username, firstName, lastName, email, password, storeInfo } =
+      req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     try {
       const result = await sellerModel.createSeller(
-        name,
+        username,
+        firstName,
+        lastName,
         email,
         hashedPassword,
         storeInfo
@@ -45,9 +48,9 @@ class SellerController {
   }
 
   static async getSellerByUsername(req, res) {
-    const { name } = req.params;
+    const { username } = req.params;
     try {
-      const seller = await sellerModel.getSellerByUsername(name);
+      const seller = await sellerModel.getSellerByUsername(username);
       if (!seller) {
         return res.status(404).json({ error: "Vendedor no encontrado" });
       }
@@ -92,9 +95,9 @@ class SellerController {
   }
 
   static async sellerExistsByUsername(req, res) {
-    const { name } = req.params;
+    const { username } = req.params;
     try {
-      const seller = await sellerModel.getSellerByUsername(name);
+      const seller = await sellerModel.getSellerByUsername(username);
       if (!seller) {
         return res.status(404).json({ error: "Vendedor no encontrado" });
       }

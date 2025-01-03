@@ -2,16 +2,20 @@ import db from "../../db/database.js";
 import ISellerRepository from "./ISellerRepository.js";
 
 class SellerRepository extends ISellerRepository {
-  createSeller(name, email, password, storeInfo) {
+  createSeller(username, firstName, lastName, email, password, storeInfo) {
     return new Promise((resolve, reject) => {
-      const query = `INSERT INTO sellers (name, email, password, storeInfo) VALUES (?, ?, ?, ?)`;
-      db.run(query, [name, email, password, storeInfo], function (err) {
-        if (err) {
-          return reject(err);
-        } else {
-          resolve({ id: this.lastID });
+      const query = `INSERT INTO sellers (username, firstName, lastName, email, password, storeInfo) VALUES (?, ?, ?, ?, ?, ?)`;
+      db.run(
+        query,
+        [username, firstName, lastName, email, password, storeInfo],
+        function (err) {
+          if (err) {
+            return reject(err);
+          } else {
+            resolve({ id: this.lastID });
+          }
         }
-      });
+      );
     });
   }
 
@@ -41,10 +45,10 @@ class SellerRepository extends ISellerRepository {
     });
   }
 
-  getSellerByUsername(name) {
+  getSellerByUsername(username) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM sellers WHERE name = ?`;
-      db.get(query, [name], (err, row) => {
+      const query = `SELECT * FROM sellers WHERE username = ?`;
+      db.get(query, [username], (err, row) => {
         if (err) {
           return reject(err);
         } else {
@@ -59,9 +63,17 @@ class SellerRepository extends ISellerRepository {
       const updates = [];
       const parametros = [];
 
-      if (seller.name) {
-        updates.push(`name = ?`);
-        parametros.push(seller.name);
+      if (seller.username) {
+        updates.push(`username = ?`);
+        parametros.push(seller.username);
+      }
+      if (seller.firstName) {
+        updates.push(`firstName = ?`);
+        parametros.push(seller.firstName);
+      }
+      if (seller.lastName) {
+        updates.push(`lastName = ?`);
+        parametros.push(seller.lastName);
       }
       if (seller.email) {
         updates.push(`email = ?`);
@@ -114,10 +126,10 @@ class SellerRepository extends ISellerRepository {
     });
   }
 
-  sellerExistsByUsername(name) {
+  sellerExistsByUsername(username) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT COUNT(*) AS count FROM sellers WHERE name = ?`;
-      db.get(query, [name], (err, row) => {
+      const query = `SELECT COUNT(*) AS count FROM sellers WHERE username = ?`;
+      db.get(query, [username], (err, row) => {
         if (err) {
           return reject(err);
         } else {
@@ -126,7 +138,6 @@ class SellerRepository extends ISellerRepository {
       });
     });
   }
-
 }
 
 export default SellerRepository;

@@ -1,12 +1,14 @@
 CREATE TABLE IF NOT EXISTS sellers (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,
-  email TEXT NOT NULL UNIQUE,
-  password TEXT NOT NULL,
-  registerDate TEXT NOT NULL DEFAULT (DATETIME('now')),
-  storeInfo TEXT NOT NULL,
-  dateUpdated TEXT,
-  dateDeleted TEXT
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    registerDate TEXT NOT NULL DEFAULT (DATETIME('now')),
+    storeInfo TEXT NOT NULL,
+    dateUpdated TEXT,
+    dateDeleted TEXT
 );
 
 CREATE TRIGGER IF NOT EXISTS update_seller_date

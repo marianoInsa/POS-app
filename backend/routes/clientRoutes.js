@@ -16,7 +16,7 @@ clientRouter
   .head((req, res) => ClientController.clientExistsById(req, res));
 
 clientRouter
-  .route("/nombre/:name")
+  .route("/nombre/:username")
   .get((req, res) => ClientController.getClientByUsername(req, res))
   .head((req, res) => ClientController.clientExistsByUsername(req, res));
 

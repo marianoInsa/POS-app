@@ -1,5 +1,5 @@
 class IClientRepository {
-  createClient(name, email, password) {
+  createClient(username, firstName, lastName, email, password) {
     throw new Error("Metodo no implementado");
   }
 
@@ -11,7 +11,7 @@ class IClientRepository {
     throw new Error("Metodo no implementado");
   }
 
-  getClientByUsername(name) {
+  getClientByUsername(username) {
     throw new Error("Metodo no implementado");
   }
 
@@ -27,7 +27,7 @@ class IClientRepository {
     throw new Error("Metodo no implementado");
   }
 
-  clientExistsByUsername(name) {
+  clientExistsByUsername(username) {
     throw new Error("Metodo no implementado");
   }
 }

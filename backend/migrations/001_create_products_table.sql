@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS products (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     idSeller INTEGER NOT NULL,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     description TEXT NOT NULL,
     price REAL NOT NULL,
     category TEXT NOT NULL,
@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS products (
     dateUpdated TEXT,
     dateDeleted TEXT,
 
-    FOREIGN KEY (idSeller) REFERENCES sellers(id) ON DELETE CASCADE
+    FOREIGN KEY (idSeller) REFERENCES sellers(id) ON DELETE CASCADE,
+    UNIQUE (name, idSeller)
 );
 
 CREATE TRIGGER IF NOT EXISTS update_product_date

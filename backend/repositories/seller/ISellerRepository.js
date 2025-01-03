@@ -1,5 +1,5 @@
 class ISellerRepository {
-  createSeller(name, email, password, storeInfo) {
+  createSeller(username, firstName, lastName, email, password, storeInfo) {
     throw new Error("Metodo no implementado");
   }
 
@@ -11,7 +11,7 @@ class ISellerRepository {
     throw new Error("Metodo no implementado");
   }
 
-  getSellerByUsername(name) {
+  getSellerByUsername(username) {
     throw new Error("Metodo no implementado");
   }
 
@@ -27,7 +27,7 @@ class ISellerRepository {
     throw new Error("Metodo no implementado");
   }
 
-  sellerExistsByUsername(name) {
+  sellerExistsByUsername(username) {
     throw new Error("Metodo no implementado");
   }
 }

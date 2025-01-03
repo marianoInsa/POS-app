@@ -16,7 +16,7 @@ sellerRoutes
   .head((req, res) => SellerController.sellerExistsById(req, res));
 
 sellerRoutes
-  .route("/nombre/:name")
+  .route("/nombre/:username")
   .get((req, res) => SellerController.getSellerByUsername(req, res))
   .head((req, res) => SellerController.sellerExistsByUsername(req, res));
 

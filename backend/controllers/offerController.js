@@ -6,9 +6,14 @@ const offerModel = new OfferModel(offerRepository);
 
 class OfferController {
   static async createOffer(req, res) {
-    const { name, description, value } = req.body;
+    const { idProduct, name, description, value } = req.body;
     try {
-      const result = await offerModel.createOffer(name, description, value);
+      const result = await offerModel.createOffer(
+        idProduct,
+        name,
+        description,
+        value
+      );
       res.status(201).json(result);
     } catch (err) {
       res.status(500).json({ error: err.message });

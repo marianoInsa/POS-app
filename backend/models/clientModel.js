@@ -3,8 +3,14 @@ class ClientModel {
     this.repository = repository;
   }
 
-  createClient(name, email, password) {
-    return this.repository.createClient(name, email, password);
+  createClient(username, firstName, lastName, email, password) {
+    return this.repository.createClient(
+      username,
+      firstName,
+      lastName,
+      email,
+      password
+    );
   }
 
   getClients() {
@@ -15,8 +21,8 @@ class ClientModel {
     return this.repository.getClientById(id);
   }
 
-  getClientByUsername(name) {
-    return this.repository.getClientByUsername(name);
+  getClientByUsername(username) {
+    return this.repository.getClientByUsername(username);
   }
 
   updateClient(id, user) {
@@ -31,8 +37,8 @@ class ClientModel {
     return this.repository.clientExistsById(id);
   }
 
-  clientExistsByUsername(name) {
-    return this.repository.clientExistsByUsername(name);
+  clientExistsByUsername(username) {
+    return this.repository.clientExistsByUsername(username);
   }
 }
 

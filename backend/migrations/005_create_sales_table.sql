@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS sales (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     total REAL NOT NULL,
-    idClient INTEGER NOT NULL,
+    idClient INTEGER NOT NULL UNIQUE,
 
     dateCreated TEXT NOT NULL DEFAULT (DATETIME('now')),
     dateUpdated TEXT,
