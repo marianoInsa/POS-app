@@ -1,7 +1,6 @@
 <div>
   <nav>
         <a href="/">Inicio</a>
-        <a href="/registrarse">Registrarse</a>
         <a href="/login">Iniciar Sesión</a>
         <a href="/productos">Productos</a>
         <a href="/informacion">Información</a>

@@ -58,6 +58,13 @@
     <button on:click={() => onSubmit({ userType, username, password, email, storeInfo })}>
       {buttonLabel}
     </button>
+
+    {#if title === 'Inicio de Sesion'}
+      <p>¿No tienes cuenta? <a href="/registrarse">Registrate</a></p>
+      <p> <a href="/#">Olvidé mi contraseña</a> </p>
+    {:else}
+      <p>¿Ya tienes cuenta? <a href="/login">Inicia Sesión</a></p>
+    {/if}
   </div>
 </div>
 
@@ -112,5 +119,15 @@
   .form-box h3 {
     font-size: 24px;
     text-align: center;
+  }
+
+  .form-box p {
+    margin-top: 10px;
+    font-size: 14px;
+  }
+
+  .form-box a {
+    color: CornflowerBlue;
+    text-decoration: none;
   }
 </style>
